@@ -48,10 +48,47 @@ const root = document.querySelector('#root');
     }
 
     function time() {
-        return <p>{new Date().toLocaleTimeString()}</p>
+        return <p className="my-3 text-center font-semibold">{new Date().toLocaleTimeString()}</p>
     }
 
-    const item1 = <div className="box"></div>
+    const item1 = <div className="box mt-5 mx-auto rounded-3xl"></div>
+    
+    function clickMe(msg) {
+        alert(msg);
+    }
+
+    //Belajar React Event Handling
+    const btn1 = (
+        <button onClick={clickMe.bind(this, 'ZONK!')}
+                className="w-auto h-auto block py-2 px-5 bg-sky-500 mx-auto my-5 rounded-3xl text-white font-bold shadow-lg hover:bg-sky-600 hover:-translate-y-2 focus:ring focus:ring-sky-300 transition duration-500">Tweet</button>
+    );
+    
+    // Belajar React State (App Counter)
+    function Counter() {
+        const [count, setCount] = React.useState(0);
+
+        return (
+            <div className="flex justify-center my-5">
+                <button onClick={function () {
+                    setCount(count - 1)
+                }} className="w-auto h-auto py-auto px-5 bg-teal-500 rounded-3xl shadow-lg hover:bg-teal-300 transition duration-300">Kurang</button>
+
+                <h3 className="mx-5 text-2xl font-bold">{count}</h3>
+
+                <button onClick={function () {
+                    setCount(count + 1)
+                }} className="w-auto h-auto py-auto px-5 bg-teal-500 rounded-3xl shadow-lg hover:bg-teal-300 transition duration-300">Tambah</button>
+            </div>
+        );
+    }
+    
+    //TODO React Component Lifecycle memakai React.useEffect()
+    //TODO untuk memantau perubahan dari state apapun di dalam sebuah function
+    //TODO Bisa diatur dengan menggunakan parameter ke-2 [Array] bisa juga dibuat Empty Array
+    //TODO Video ada di part 21 - 23  
+    // React.useEffect(function () {
+    //     console.log('React Use Effect');
+    // });
 
     function tampilkan() {
     // Dibungkus dengan 1 Parent
@@ -72,10 +109,10 @@ const root = document.querySelector('#root');
         React.createElement('li', null, 'Grape'),
 
         <Halo name='React Component' class='mt-10 text-center text-2xl text-slate-800'/>,
-
         time(),
-
         item1,
+        btn1,
+        <Counter />,
 
         // Buat Scroll jauh ke bawah
         React.createElement('div', {className: "mb-72"})

@@ -45,12 +45,50 @@ function Halo(props) {
 }
 
 function time() {
-  return /*#__PURE__*/React.createElement("p", null, new Date().toLocaleTimeString());
+  return /*#__PURE__*/React.createElement("p", {
+    className: "my-3 text-center font-semibold"
+  }, new Date().toLocaleTimeString());
 }
 
 const item1 = /*#__PURE__*/React.createElement("div", {
-  className: "box"
+  className: "box mt-5 mx-auto rounded-3xl"
 });
+
+function clickMe(msg) {
+  alert(msg);
+} //Belajar React Event Handling
+
+
+const btn1 = /*#__PURE__*/React.createElement("button", {
+  onClick: clickMe.bind(this, 'ZONK!'),
+  className: "w-auto h-auto block py-2 px-5 bg-sky-500 mx-auto my-5 rounded-3xl text-white font-bold shadow-lg hover:bg-sky-600 hover:-translate-y-2 focus:ring focus:ring-sky-300 transition duration-500"
+}, "Tweet"); // Belajar React State (App Counter)
+
+function Counter() {
+  const [count, setCount] = React.useState(0);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-center my-5"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setCount(count - 1);
+    },
+    className: "w-auto h-auto py-auto px-5 bg-teal-500 rounded-3xl shadow-lg hover:bg-teal-300 transition duration-300"
+  }, "Kurang"), /*#__PURE__*/React.createElement("h3", {
+    className: "mx-5 text-2xl font-bold"
+  }, count), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setCount(count + 1);
+    },
+    className: "w-auto h-auto py-auto px-5 bg-teal-500 rounded-3xl shadow-lg hover:bg-teal-300 transition duration-300"
+  }, "Tambah"));
+} //TODO React Component Lifecycle memakai React.useEffect()
+//TODO untuk memantau perubahan dari state apapun di dalam sebuah function
+//TODO Bisa diatur dengan menggunakan parameter ke-2 [Array] bisa juga dibuat Empty Array
+//TODO Video ada di part 21 - 23  
+// React.useEffect(function () {
+//     console.log('React Use Effect');
+// });
+
 
 function tampilkan() {
   // Dibungkus dengan 1 Parent
@@ -60,7 +98,7 @@ function tampilkan() {
   h1, h2, image, p1, p2, babelJS, greet, React.createElement('li', null, 'Apple'), React.createElement('li', null, 'Orange'), React.createElement('li', null, 'Grape'), /*#__PURE__*/React.createElement(Halo, {
     name: "React Component",
     class: "mt-10 text-center text-2xl text-slate-800"
-  }), time(), item1, // Buat Scroll jauh ke bawah
+  }), time(), item1, btn1, /*#__PURE__*/React.createElement(Counter, null), // Buat Scroll jauh ke bawah
   React.createElement('div', {
     className: "mb-72"
   }));
