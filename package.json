@@ -7,11 +7,16 @@
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.5",
     "@babel/preset-react": "^7.16.7",
+    "init": "^0.1.2",
     "lite-server": "^2.6.1"
   },
   "scripts": {
-    "build": "babel src --out-dir public -w",
+    "build": "babel src --out-dir public --watch",
     "serve": "lite-server --baseDir public",
-    "start": "concurrently \"yarn build\" \"yarn serve\""
+    "dev": "npx tailwindcss -i ./src/input.css -o ./public/output.css --watch",
+    "start": "concurrently \"yarn build\" \"yarn run serve\""
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.0.23"
   }
 }

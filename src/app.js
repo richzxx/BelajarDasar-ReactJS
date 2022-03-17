@@ -2,8 +2,6 @@
 // Pisahkan File React JS ke dalam folder Src agar bisa di compile dengan Babel JS
 const root = document.querySelector('#root');
 
-    console.log('Compile Otomatis');
-
     // React JS returnnya = Objek Literal
     const h1 = React.createElement('h1', {
         children: 'My First React App!',
@@ -90,10 +88,74 @@ const root = document.querySelector('#root');
     //     console.log('React Use Effect');
     // });
 
+    // Conditional Rendering
+    function App() {
+
+        const [login, setLogin] = React.useState(false);
+
+        if (login) {
+            return (
+                <>
+                <h1 className="text-3xl mb-3">Sudah Login</h1>
+                <button className="px-5 py-2 text-white font-bold rounded-3xl bg-sky-500 hover:bg-sky-600 transition duration-500"
+                    onClick={function () {
+                    setLogin(false);
+                    }}>Logout</button>
+                </>
+            )
+        }
+
+        return (
+            <>
+                <h1 className="text-3xl mb-3">Belum Login</h1>
+                <button className="px-5 py-2 text-white font-bold rounded-3xl bg-sky-500 hover:bg-sky-600 transition duration-500"
+                    onClick={function () {
+                        setLogin(true);
+                    }}>Login</button>
+            </>
+        )
+    }
+
+    // Form React
+    function CobaForm() {
+        // const namaRef = React.useRef(null); Pake Cara Ref
+        const [nama, setNama] = React.useState('');
+
+        function formSubmit(event) {
+            event.preventDefault();
+            // const nama = namaRef.current.value;
+            
+            if (nama == null || nama === false) {
+                console.log('Nama Kamu Belum diisi');
+            } else {
+                console.log(`Nama kamu ${nama}`);
+            }
+
+        }
+
+        return (
+            <>
+                <form className="bg-white shadow-md rounded-2xl max-w-lg mt-10 px-8 pt-6 pb-8 mb-4" onSubmit={formSubmit}>
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2" for="">Nama : </label>
+                        <input className="shadow appearance-none border border-slate-500 focus:border-sky-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline transition duration-300" type="text" name="nama" /** 
+                        ref = { namaRef } Ubah Reference nya disini
+                        */
+                        onChange={function (event) {
+                            setNama(event.target.value);
+                        }} /** Disini kita menggunakan Controlled Component*/
+                        />
+                    </div>
+                    <button className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-3xl focus:outline-none focus:shadow-outline transition duration-500" type="submit">Submit</button>
+                </form>
+            </>
+        )
+    }
+
     function tampilkan() {
     // Dibungkus dengan 1 Parent
     const element = React.createElement('div', {
-        className: 'container p-5 max-w-full md:max-w-xl md:mx-auto'
+        className: 'container p-5 max-w-full md:max-w-2xl md:mx-auto'
     },
         // Nested Element React JS
         h1,
@@ -113,6 +175,8 @@ const root = document.querySelector('#root');
         item1,
         btn1,
         <Counter />,
+        <App />,
+        <CobaForm />,
 
         // Buat Scroll jauh ke bawah
         React.createElement('div', {className: "mb-72"})

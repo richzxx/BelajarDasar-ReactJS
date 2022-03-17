@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .box {
+    width: 200px;
+    height: 200px;
+    background-color: #c0ffee;
+  }
+}
