@@ -125,7 +125,7 @@ const root = document.querySelector('#root');
             event.preventDefault();
             // const nama = namaRef.current.value;
             
-            if (nama == null || nama === false) {
+            if (nama == null || nama === '') {
                 console.log('Nama Kamu Belum diisi');
             } else {
                 console.log(`Nama kamu ${nama}`);
@@ -149,6 +149,161 @@ const root = document.querySelector('#root');
                     <button className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-3xl focus:outline-none focus:shadow-outline transition duration-500" type="submit">Submit</button>
                 </form>
             </>
+        )
+    }
+
+    function CobaFetch() {
+
+        // Fetch data itu Async, jadi harus Chaining dengan .then biar ditunggu dulu proses fetch datanya selesai. Baru bisa diproses Datanya kembali.
+
+        const [news, setNews] = React.useState([]);
+        const [loading, setLoading] = React.useState(true);
+
+        React.useEffect(function () {
+            async function getData() {
+                const request = await fetch("https://api.spaceflightnewsapi.net/v3/blogs");
+                const response = await request.json();
+
+                // Ubah State News & Loading
+                setNews(response);
+                setLoading(false);
+            }
+            getData();
+        }, []);
+
+        return (
+            <>
+            
+            <h1 className="my-10 text-2xl font-bold text-center">Belajar Data Fetch</h1>
+                
+            {/* Jika mau tampil State Loadingnya, kita harus menggunakan Async dan Await */}
+            {loading && (<h2 className="text-lg font-semibold text-center">Data Loading ...</h2>)}
+
+            <ul className="list-disc">
+                {news.map((item) => {
+                    return <li key={item.id}>{item.title}</li>
+                })}
+            </ul>
+            
+            </>
+        )
+    }
+
+    function BelajarTodos() {
+        const [activity, setActivity] = React.useState('');
+        const [todos, setTodos] = React.useState([]);
+        const [edit, setEdit] = React.useState({});
+        const [nullValue, setNullValue] = React.useState('');
+
+        function generateId() {
+            return Date.now();
+        }
+
+        function saveTodoHandler(event) {
+            event.preventDefault();
+
+            if (!activity) {
+                return setNullValue('Activity is Null! Please input activity');
+            }
+
+            // Edit Todo Hadnler (Nested with Save Todo Handler)
+            if (edit.id) {
+
+                // Masukin Value yang di Input (di edit)
+                const updatedTodo = {
+                    id: edit.id,
+                    activity: activity
+                }
+
+                // FindIndex yang mau diedit
+                const editTodoIndex = todos.findIndex(function (todo) {
+                    return todo.id == edit.id
+                });
+
+                // Clone Array todos (karena mutable)
+                const updatedTodos = [...todos];
+                updatedTodos[editTodoIndex] = updatedTodo;
+
+                setTodos(updatedTodos);
+                return cancelEditHandler();
+            }
+
+            setTodos([...todos, {
+                id: generateId(),
+                activity: activity
+            }]);
+            setNullValue('');
+            setActivity('');
+        }
+
+        function removeTodoHandler(todoId) {
+            
+            const filteredTodos = todos.filter(function (todo) {
+                return todo.id !== todoId;
+            });
+
+            //TODO Jadi, kita menSet todo array nya dengan menfilter id yg kita click. Supaya id yg kita klik tidak terfilter bersamaan dengan todo yg tidak kita klik.
+            //TODO Maka dari itu, ...todos yg ada akan berkurang karena terfilter. Intinya, prinsipnya sama dengan Hapus (Delete)
+            
+            setTodos(filteredTodos);
+
+            // Meminimalisir Eksekusi
+            if (edit.id) cancelEditHandler(); 
+        }
+
+        function editTodoHandler(todo) {
+            setNullValue('');
+            setActivity(todo.activity);
+            setEdit(todo);
+        }
+
+        function cancelEditHandler() {
+            setEdit({});
+            setActivity('');
+        }
+
+        return (
+            <div className="">
+                <h1 className="my-10 text-2xl font-bold text-center block">Simple Todo List</h1>
+                <form onSubmit={saveTodoHandler}>
+                    <input
+                        type="text"
+                        className="block mx-auto shadow-md appearance-none border border-slate-500 focus:border-sky-500 rounded w-1/2 py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline transition duration-300"
+                        placeholder="Activity Name"
+                        value={activity}
+                        onChange={function (event) {
+                            setActivity(event.target.value);
+                        }}
+                    />
+                    {edit.id && <button className="block mx-auto px-4 py-2 rounded-full font-bold text-white bg-red-500 text-lg font-sans hover:bg-red-600">X</button>}
+                <button
+                        type="submit"
+                        className={`block mx-auto my-2 px-4 py-2 ${edit.id ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-sky-500 hover:bg-sky-600'} rounded-3xl shadow-md text-white font-semibold hover:scale-105 transition duration-300`}
+                >{edit.id ? 'Save Changes' : 'Submit'}</button>
+                </form>
+
+                {nullValue && <div className="text-slate-700 text-2xl text-center">{ nullValue }</div>}
+
+                {todos.length > 0 ? (
+                    <ol className="list-decimal mt-8 mx-20">
+                    {todos.map(function (todo) {
+                        return (<li 
+                            className="mt-2"
+                            key={todo.id}>{todo.activity}
+                            <button
+                                onClick={editTodoHandler.bind(this, todo)}
+                                className="ml-3 px-4 py-2 text-white font-semibold rounded-3xl bg-yellow-500 hover:bg-yellow-600 hover:translate-x-1 transition duration-300"
+                            >Edit</button>
+                            <button
+                                onClick={removeTodoHandler.bind(this, todo.id)}
+                                className="ml-3 px-4 py-2 text-white font-semibold rounded-3xl bg-red-500 hover:bg-red-600 hover:translate-x-1 transition duration-300"
+                            >Hapus</button>
+                        </li>
+                        );
+                    })}
+                </ol>
+                ) : <h2 className="mt-10 text-xl text-slate-700 font-semibold text-center">Empty Todos</h2>}
+            </div>
         )
     }
 
@@ -177,6 +332,8 @@ const root = document.querySelector('#root');
         <Counter />,
         <App />,
         <CobaForm />,
+        <CobaFetch />,
+        <BelajarTodos />,
 
         // Buat Scroll jauh ke bawah
         React.createElement('div', {className: "mb-72"})
