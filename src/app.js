@@ -211,8 +211,8 @@ const root = document.querySelector('#root');
 
                 // Masukin Value yang di Input (di edit)
                 const updatedTodo = {
-                    id: edit.id,
-                    activity: activity
+                    ...edit,
+                    activity
                 }
 
                 // FindIndex yang mau diedit
@@ -230,7 +230,8 @@ const root = document.querySelector('#root');
 
             setTodos([...todos, {
                 id: generateId(),
-                activity: activity
+                activity: activity,
+                status: false
             }]);
             setNullValue('');
             setActivity('');
@@ -262,6 +263,25 @@ const root = document.querySelector('#root');
             setActivity('');
         }
 
+        function doneTodoHandler(todo) {
+            
+            const updatedTodo = {
+                ...todo,
+                status: todo.status ? false : true
+            }
+            
+            // FindIndex Todos yang mau diedit
+            const editTodoIndex = todos.findIndex(function (currentTodos) {
+                return currentTodos.id == todo.id
+            });
+
+            // Clone Array todos (karena mutable)
+            const updatedTodos = [...todos];
+            updatedTodos[editTodoIndex] = updatedTodo;
+
+            setTodos(updatedTodos);
+        }
+
         return (
             <div className="">
                 <h1 className="my-10 text-2xl font-bold text-center block">Simple Todo List</h1>
@@ -287,9 +307,20 @@ const root = document.querySelector('#root');
                 {todos.length > 0 ? (
                     <ol className="list-decimal mt-8 mx-20">
                     {todos.map(function (todo) {
-                        return (<li 
-                            className="mt-2"
-                            key={todo.id}>{todo.activity}
+                        return (
+                            <li 
+                                className="mt-2"
+                                key={todo.id}>
+                            
+                            <input
+                            type="checkbox"
+                            checked={todo.status}
+                            onClick={doneTodoHandler.bind(this, todo)}
+                            className="mr-3 w-5 h-5 rounded-3xl border border-slate-700 hover:bg-slate-300 transition duration-300"
+                            />
+                            {todo.activity} - 
+                            
+                            <span className={`font-semibold mr-3 ${todo.status ? 'text-green-500' : 'text-yellow-500 italic'}`}> {todo.status ? 'Done' : 'Waiting'}</span>
                             <button
                                 onClick={editTodoHandler.bind(this, todo)}
                                 className="ml-3 px-4 py-2 text-white font-semibold rounded-3xl bg-yellow-500 hover:bg-yellow-600 hover:translate-x-1 transition duration-300"
